@@ -1,0 +1,108 @@
+<html>
+<head>
+    <title>Timer</title>
+    <style>
+        body {
+            center;
+        }
+
+        div#container {
+            text-align: center;
+        }
+
+        div#display {
+            height: 100px;
+            font-size: 80;
+        }
+
+        button {
+            width: 120px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body onkeyup="keyUp(event)">
+<div id="container">
+    <span id="span_thinking_time"></span>
+
+    <div id="display"></div>
+    <button id="btn_start" readonly></button>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <button id="btn_reset" readonly>Reset</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <button id="btn_answer" readonly>Answer</button>
+    <br/><br/>
+    Start/Pause timer: Space&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Start Answering: Enter
+
+</div>
+<!--<iframe src="http://dict.youdao.com" width="100%" height="100%"/>-->
+<script>
+    var DEFAULT_VALUE = "00:00", BTN_TXT_START = "Start", BTN_TXT_PAUSE = "Pause", BTN_TXT_ANSWER = "Answer";
+    var globalTimer;
+    var counter = 0;
+    var btnStart = document.getElementById("btn_start");
+    var btnReset = document.getElementById("btn_reset");
+    var btnAnswer = document.getElementById("btn_answer");
+    var divDisplay = document.getElementById("display");
+    var spanThinkingTime = document.getElementById("span_thinking_time");
+    spanThinkingTime.innerHTML = DEFAULT_VALUE;
+    divDisplay.innerHTML = DEFAULT_VALUE;
+    btnStart.innerHTML = BTN_TXT_START;
+    btnAnswer.innerHTML = BTN_TXT_ANSWER;
+    btnStart.onclick = function () {
+        if (btnStart.innerHTML == BTN_TXT_START) {
+            globalTimer = setInterval(timer, 1000);
+            globalTimer.start;
+            btnStart.innerHTML = BTN_TXT_PAUSE;
+        } else {
+            stopTimer();
+        }
+    }
+
+    btnReset.onclick = function () {
+        stopTimer();
+        counter = 0;
+        divDisplay.innerHTML = DEFAULT_VALUE;
+    }
+
+    btnAnswer.onclick = function () {
+        event.returnValue = false;
+        spanThinkingTime.innerHTML = showTime();
+
+        btnReset.click();
+        btnStart.click();
+    }
+
+    function stopTimer() {
+        clearInterval(globalTimer);
+        btnStart.innerHTML = BTN_TXT_START;
+    }
+
+    function timer() {
+        counter++;
+        divDisplay.innerHTML = showTime();
+    }
+
+    function showTime() {
+        return formatTime(parseInt(counter / 60))
+                + ":" + formatTime(counter % 60);
+    }
+    function formatTime(val) {
+        if (val < 10)
+            val = "0" + val;
+
+        return val;
+    }
+
+    function keyUp(event) {
+//        console.log("keyDown(" + event.keyCode + ")");
+        if (event.keyCode == 32) { //space
+            btnStart.click();
+        } else if (event.keyCode == 13) { //enter
+            btnAnswer.click();
+        }
+    }
+</script>
+</body>
+</html>
